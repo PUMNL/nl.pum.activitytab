@@ -605,7 +605,7 @@ LEFT JOIN civicrm_activity_contact src ON (src.activity_id = ac.activity_id AND 
       'Bulk Email',
       'name'
     );
-    if (!is_array($input['activity_type_exclude_id'])) {
+    if (!empty($input['activity_type_exclude_id']) && !is_array($input['activity_type_exclude_id'])) {
       $activity_type_exclude_id = $input['activity_type_exclude_id'];
       $input['activity_type_exclude_id'] = array();
       $input['activity_type_exclude_id'][$activity_type_exclude_id] = $activity_type_exclude_id;
