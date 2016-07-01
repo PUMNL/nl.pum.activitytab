@@ -470,9 +470,15 @@ ORDER BY    fixed_sort_order
     if (!empty($input['activity_type_exclude_id'])) {
       if (is_array($input['activity_type_exclude_id'])) {
         foreach ($input['activity_type_exclude_id'] as $idx => $value) {
-          $input['activity_type_exclude_id'][$idx] = CRM_Utils_Type::escape($value, 'Positive');
+          if (!empty($value) && !empty($idx)) {
+            $input['activity_type_exclude_id'][$idx] = CRM_Utils_Type::escape($value, 'Positive');
+          } else {
+            unset($input['activity_type_exclude_id'][$idx]);
+          }
         }
-        $commonClauses[] = "civicrm_activity.activity_type_id NOT IN ( " . implode(",", $input['activity_type_exclude_id']) . " ) ";
+        if (count($input['activity_type_exclude_id'])) {
+          $commonClauses[] = "civicrm_activity.activity_type_id NOT IN ( " . implode(",", $input['activity_type_exclude_id']) . " ) ";
+        }
       }
       else {
         $activityTypeID = CRM_Utils_Type::escape($input['activity_type_exclude_id'], 'Positive');
