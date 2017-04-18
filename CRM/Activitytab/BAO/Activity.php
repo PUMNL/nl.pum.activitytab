@@ -15,6 +15,8 @@ class CRM_Activitytab_BAO_Activity extends CRM_Activity_BAO_Activity {
    * @access public
    */
   public static function getContactActivitySelector(&$params) {
+
+
     // format the params
     $params['offset']   = ($params['page'] - 1) * $params['rp'];
     $params['rowCount'] = $params['rp'];
@@ -24,6 +26,8 @@ class CRM_Activitytab_BAO_Activity extends CRM_Activity_BAO_Activity {
 
     // get contact activities
     $activities = CRM_Activitytab_BAO_Activity::getActivities($params);
+
+
 
     // add total
     $params['total'] = CRM_Activitytab_BAO_Activity::getActivitiesCount($params);
@@ -138,6 +142,17 @@ class CRM_Activitytab_BAO_Activity extends CRM_Activity_BAO_Activity {
           $accessMailingReport,
           CRM_Utils_Array::value('activity_id', $values)
         );
+
+        /** remove Edit and Delete Link for the Claim Activity
+         *  https://civicoop.plan.io/issues/1091 */
+
+        if( CRM_Utils_Array::value('activity_type', $values) == 'Claim'){
+          foreach($actionLinks as $key => $actionLink){
+            if($actionLink['name']=='Delete'||$actionLink['name']=='Edit'){
+              unset($actionLinks[$key]);
+            }
+          }
+        };
 
         $actionMask = array_sum(array_keys($actionLinks)) & $mask;
 
